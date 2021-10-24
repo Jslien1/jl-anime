@@ -20,14 +20,14 @@ export default function AnimeInfo() {
   async function getAnimeInfo() {
     const response = await fetch(`https://api.aniapi.com/v1/anime/${id}`);
     const anime_info = await response.json();
-    console.log(anime_info.data);
+    //console.log(anime_info.data);
     setAnimeItem(anime_info.data);
   }
 
   function getGenres() {
     let genreString = "";
     let genreList = animeItem.genres.slice(0, 3);
-    console.log(genre);
+    //console.log(genre);
     if (genre) {
       const genreExist = genreList.find((item) => genre === item);
       if (!genreExist) {

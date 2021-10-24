@@ -6,20 +6,19 @@ export default function Discovery() {
   const [animeList, setAnimeList] = useState();
   const [yearSet, setYear] = useState();
   const [genreSet, setGenre] = useState();
-  const skeletonList = Array(16).fill(
-    <AnimeSkeleton
-      outer__class={"skeleton skeleton__discovery"}
-      inner__class={"anime__cover--skeleton"}
-    />
-  );
+  const skeletonList = [];
+  for (let i = 0; i < 12; i++) {
+    skeletonList.push(
+      <AnimeSkeleton
+        outer__class={"skeleton skeleton__discovery"}
+        inner__class={"anime__cover--skeleton"}
+        key={i}
+      />
+    );
+  }
   async function getRandomAnime() {
     const response = await fetch("https://api.aniapi.com/v1/anime?nsfw=true");
     const data_list = await response.json();
-    console.log(
-      data_list.data.documents.filter((item) => {
-        return item.trailer_url && item.descriptions.en;
-      })
-    );
     setAnimeList(
       data_list.data.documents
         .filter((item) => {
@@ -30,20 +29,13 @@ export default function Discovery() {
   }
 
   async function filterYear(year) {
-    console.log(year);
     setYear(year);
-    console.log(yearSet);
     const response = genreSet
       ? await fetch(
           `https://api.aniapi.com/v1/anime?nsfw=true&year=${year}&genres=${genreSet}`
         )
       : await fetch(`https://api.aniapi.com/v1/anime?nsfw=true&year=${year}`);
     const data_list = await response.json();
-    console.log(
-      data_list.data.documents.filter((item) => {
-        return item.trailer_url && item.descriptions.en;
-      })
-    );
     setAnimeList(
       data_list.data.documents
         .filter((item) => {
@@ -54,10 +46,7 @@ export default function Discovery() {
   }
 
   async function filterGenre(genre) {
-    console.log(genre);
     setGenre(genre);
-    console.log(genreSet);
-    console.log(yearSet);
     const response = yearSet
       ? await fetch(
           `https://api.aniapi.com/v1/anime?nsfw=true&genres=${genre}&year=${yearSet}`
@@ -66,11 +55,6 @@ export default function Discovery() {
           `https://api.aniapi.com/v1/anime?nsfw=true&genres=${genre}`
         );
     const data_list = await response.json();
-    console.log(
-      data_list.data.documents.filter((item) => {
-        return item.trailer_url && item.descriptions.en;
-      })
-    );
     setAnimeList(
       data_list.data.documents
         .filter((item) => {
@@ -87,8 +71,6 @@ export default function Discovery() {
     genre.selectedIndex = null;
     let year = document.querySelector("#filter__year");
     year.selectedIndex = null;
-    console.log(genre.value);
-    console.log(year.value);
     getRandomAnime();
   }
 

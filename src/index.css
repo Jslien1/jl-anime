@@ -277,6 +277,7 @@ DISCOVERY
 */
 .discovery-row {
   display: flex;
+  min-height: 100vh;
 }
 
 .anime__list--wrapper {
@@ -319,6 +320,7 @@ Search
   position: absolute;
   top: 0;
   opacity: 0.4;
+  pointer-events: none;
 }
 
 .tree-img {
@@ -377,7 +379,9 @@ BOILER
     padding: 8px 0;
   }
   .anime,
-  .skeleton__home {
+  .skeleton__home,
+  .discovery__list .anime,
+  .skeleton__discovery {
     width: calc(100% / 3);
   }
   .anime__list--wrapper {
@@ -395,10 +399,6 @@ BOILER
   .filter__menu--wrapper {
     display: flex;
     align-items: center;
-  }
-  .discovery__list .anime,
-  .skeleton__discovery {
-    width: calc(100% / 3);
   }
   .anime__description {
     font-size: 14px;

@@ -6,9 +6,9 @@ import blossomTree from "../assets/blossom-tree.svg";
 export default function Search() {
   const location = useLocation();
   const parsed = queryString.parse(location.search);
-  console.log(parsed);
+  //console.log(parsed);
   const title = parsed.anime_title;
-  console.log(title);
+  //console.log(title);
   const [searchList, setSearchList] = useState([]);
 
   async function searchAnime() {
@@ -16,18 +16,16 @@ export default function Search() {
       `https://api.aniapi.com/v1/anime?title=${title}&nsfw=true`
     );
     const data_list = await response.json();
-    console.log(
-      data_list.data.documents.filter((item) => {
-        return item.trailer_url && item.descriptions.en;
-      })
-    );
-    setSearchList(
-      data_list.data.documents
-        .filter((item) => {
-          return item.trailer_url && item.descriptions.en;
-        })
-        .slice(0, 24)
-    );
+
+    if (data_list.data.documents) {
+      setSearchList(
+        data_list.data.documents
+          .filter((item) => {
+            return item.trailer_url && item.descriptions.en;
+          })
+          .slice(0, 24)
+      );
+    }
   }
 
   useEffect(() => {
