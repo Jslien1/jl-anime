@@ -17,7 +17,7 @@ export default function Main() {
 
   async function getRecentAnime() {
     const response = await fetch(
-      "https://api.aniapi.com/v1/anime?formats=0&status=1&year=2021&season=3&nsfw=true"
+      "https://api.aniapi.com/v1/anime?formats=0&status=0&year=2021&nsfw=true"
     );
     const data_list = await response.json();
     setRecentList(
