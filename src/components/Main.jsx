@@ -16,14 +16,19 @@ export default function Main() {
   }
 
   async function getRecentAnime() {
-    const response = await fetch(
-      "https://api.aniapi.com/v1/anime?formats=0&status=0&year=2021&nsfw=true"
+    const response2 = await fetch(
+      "https://kitsu.io/api/edge/anime?filter[status]=current&filter[subtype]=TV&sort=-averageRating&page[limit]=20"
     );
-    const data_list = await response.json();
+    const data_list2 = await response2.json();
+    // console.log(data_list2);
     setRecentList(
-      data_list.data.documents
+      data_list2.data
         .filter((item) => {
-          return item.trailer_url && item.descriptions.en;
+          return (
+            item.attributes.canonicalTitle &&
+            item.attributes.posterImage.original &&
+            item.attributes.youtubeVideoId
+          );
         })
         .slice(0, 12)
     );
@@ -43,8 +48,8 @@ export default function Main() {
                 {recentList.map((anime) => (
                   <Anime
                     id={anime.id}
-                    title={anime.titles.en}
-                    cover_image={anime.cover_image}
+                    title={anime.attributes.canonicalTitle}
+                    cover_image={anime.attributes.posterImage.original}
                     key={anime.id}
                     genre={null}
                   />

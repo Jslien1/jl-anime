@@ -17,12 +17,17 @@ export default function Discovery() {
     );
   }
   async function getRandomAnime() {
-    const response = await fetch("https://api.aniapi.com/v1/anime?nsfw=true");
-    const data_list = await response.json();
+    const response2 = await fetch(
+      "https://kitsu.io/api/edge/anime?page[limit]=20"
+    );
+    const data_list2 = await response2.json();
     setAnimeList(
-      data_list.data.documents
+      data_list2.data
         .filter((item) => {
-          return item.trailer_url && item.descriptions.en;
+          return (
+            item.attributes.canonicalTitle &&
+            item.attributes.posterImage.original
+          );
         })
         .slice(0, 12)
     );
@@ -32,14 +37,20 @@ export default function Discovery() {
     setYear(year);
     const response = genreSet
       ? await fetch(
-          `https://api.aniapi.com/v1/anime?nsfw=true&year=${year}&genres=${genreSet}`
+          `https://kitsu.io/api/edge/anime?filter[seasonYear]=${year}&filter[categories]=${genreSet}&page[limit]=20`
         )
-      : await fetch(`https://api.aniapi.com/v1/anime?nsfw=true&year=${year}`);
-    const data_list = await response.json();
+      : await fetch(
+          `https://kitsu.io/api/edge/anime?filter[seasonYear]=${year}&page[limit]=20`
+        );
+    const data_list2 = await response.json();
     setAnimeList(
-      data_list.data.documents
+      data_list2.data
         .filter((item) => {
-          return item.trailer_url && item.descriptions.en;
+          return (
+            item.attributes.canonicalTitle &&
+            item.attributes.posterImage.original &&
+            item.attributes.youtubeVideoId
+          );
         })
         .slice(0, 12)
     );
@@ -49,16 +60,19 @@ export default function Discovery() {
     setGenre(genre);
     const response = yearSet
       ? await fetch(
-          `https://api.aniapi.com/v1/anime?nsfw=true&genres=${genre}&year=${yearSet}`
+          `https://kitsu.io/api/edge/anime?filter[seasonYear]=${yearSet}&filter[categories]=${genre}&page[limit]=20`
         )
       : await fetch(
-          `https://api.aniapi.com/v1/anime?nsfw=true&genres=${genre}`
+          `https://kitsu.io/api/edge/anime?filter[categories]=${genre}&page[limit]=20`
         );
     const data_list = await response.json();
     setAnimeList(
-      data_list.data.documents
+      data_list.data
         .filter((item) => {
-          return item.trailer_url && item.descriptions.en;
+          return (
+            item.attributes.canonicalTitle &&
+            item.attributes.posterImage.original
+          );
         })
         .slice(0, 12)
     );
@@ -90,8 +104,8 @@ export default function Discovery() {
                   {animeList.map((anime) => (
                     <Anime
                       id={anime.id}
-                      title={anime.titles.en}
-                      cover_image={anime.cover_image}
+                      title={anime.attributes.canonicalTitle}
+                      cover_image={anime.attributes.posterImage.original}
                       key={anime.id}
                       genre={genreSet}
                     />
@@ -140,7 +154,6 @@ export default function Discovery() {
                 <option value="Mecha">Mecha</option>
                 <option value="Psychological">Psychological</option>
                 <option value="Romance">Romance</option>
-                <option value="Sci-Fi">Sci-Fi</option>
                 <option value="Shounen">Shounen</option>
                 <option value="Slice of Life">Slice of Life</option>
                 <option value="Sports">Sports</option>

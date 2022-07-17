@@ -6,22 +6,26 @@ import blossomTree from "../assets/blossom-tree.svg";
 export default function Search() {
   const location = useLocation();
   const parsed = queryString.parse(location.search);
-  //console.log(parsed);
+  // console.log(parsed);
   const title = parsed.anime_title;
-  //console.log(title);
+  // console.log(title);
   const [searchList, setSearchList] = useState([]);
 
   async function searchAnime() {
     const response = await fetch(
-      `https://api.aniapi.com/v1/anime?title=${title}&nsfw=true`
+      `https://kitsu.io/api/edge/anime?filter[text]=${title}&page[limit]=20`
     );
     const data_list = await response.json();
 
-    if (data_list.data.documents) {
+    if (data_list.data) {
       setSearchList(
-        data_list.data.documents
+        data_list.data
           .filter((item) => {
-            return item.trailer_url && item.descriptions.en;
+            return (
+              item.attributes.canonicalTitle &&
+              item.attributes.posterImage.original &&
+              item.attributes.youtubeVideoId
+            );
           })
           .slice(0, 24)
       );
@@ -40,8 +44,8 @@ export default function Search() {
             {searchList.map((anime) => (
               <Anime
                 id={anime.id}
-                title={anime.titles.en}
-                cover_image={anime.cover_image}
+                title={anime.attributes.canonicalTitle}
+                cover_image={anime.attributes.posterImage.original}
                 key={anime.id}
                 genre={null}
               />
